@@ -16,7 +16,11 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.model;
+package nl.dannyj.bookmarkmanager.controllers;
 
-public class BookmarkModel {
+import org.springframework.stereotype.Controller;
+
+// https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html
+@Controller
+public class AuthController {
 }

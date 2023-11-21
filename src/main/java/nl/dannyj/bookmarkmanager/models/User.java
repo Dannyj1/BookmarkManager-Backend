@@ -16,19 +16,39 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.service.auth;
+package nl.dannyj.bookmarkmanager.models;
 
-import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
-@Service
-public class JWTService {
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@DynamicUpdate
+@Builder
+@Entity
+public class User {
 
-    private final Algorithm jwtAlgorithm;
+    @Id
+    @GeneratedValue
+    @NotNull
+    private int id;
 
-    @Autowired
-    public JWTService(Algorithm jwtAlgorithm) {
-        this.jwtAlgorithm = jwtAlgorithm;
-    }
+    @NotNull
+    @Column(unique = true)
+    private String username;
+
+    @NotNull
+    private String passwordHash;
+
+    private boolean isAdmin;
+
 }

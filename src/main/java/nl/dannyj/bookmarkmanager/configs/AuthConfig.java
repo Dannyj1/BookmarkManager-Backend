@@ -16,8 +16,11 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.config;
+package nl.dannyj.bookmarkmanager.configs;
 
+import com.auth0.jwt.algorithms.Algorithm;
+import nl.dannyj.bookmarkmanager.properties.ApplicationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -28,7 +31,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class SecurityConfig {
+public class AuthConfig {
+
+    private final String jwtSecret;
+
+    @Autowired
+    public AuthConfig(ApplicationProperties appProperties) {
+        this.jwtSecret = appProperties.getSecurity().getJwtSecret();
+    }
+
+    @Bean
+    public Algorithm algorithm() {
+        return Algorithm.HMAC512(jwtSecret);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

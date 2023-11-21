@@ -16,21 +16,22 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.service.auth;
+package nl.dannyj.bookmarkmanager.transformers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import lombok.NonNull;
+import nl.dannyj.bookmarkmanager.dtos.UserDTO;
+import nl.dannyj.bookmarkmanager.models.User;
 
-@Service
-public class AuthService {
-
-    private final SecurityService securityService;
-
-    @Autowired
-    public AuthService(SecurityService securityService) {
-        this.securityService = securityService;
+public class UserTransformer implements Transformer<User, UserDTO> {
+    @Override
+    public User toModel(@NonNull UserDTO dto) {
+        return User.builder()
+                .username(dto.getUsername())
+                .build();
     }
 
-
-
+    @Override
+    public UserDTO toDto(@NonNull User model) {
+        return new UserDTO(model.getUsername());
+    }
 }

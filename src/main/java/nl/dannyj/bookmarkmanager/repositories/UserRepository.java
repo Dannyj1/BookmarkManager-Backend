@@ -16,13 +16,17 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.dto;
+package nl.dannyj.bookmarkmanager.repositories;
 
-import lombok.Data;
+import nl.dannyj.bookmarkmanager.models.User;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-@Data
-public class UserDTO {
+import java.util.Optional;
 
-    private final String username;
+@Repository
+public interface UserRepository extends CrudRepository<User, Integer> {
+
+    Optional<User> findByUsername(String username);
 
 }

@@ -16,11 +16,25 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.controller;
+package nl.dannyj.bookmarkmanager.properties;
 
-import org.springframework.stereotype.Controller;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
-// https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html
-@Controller
-public class AuthController {
+@Validated
+@ConfigurationProperties(prefix = "settings")
+@Getter
+@Setter
+public class ApplicationProperties {
+
+    private Security security;
+
+    @Getter
+    @Setter
+    public static class Security {
+        private String jwtSecret;
+    }
 }

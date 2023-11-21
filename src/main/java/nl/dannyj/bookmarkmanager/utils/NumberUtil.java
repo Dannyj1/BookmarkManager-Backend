@@ -16,21 +16,19 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.config;
+package nl.dannyj.bookmarkmanager.utils;
 
-import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import lombok.experimental.UtilityClass;
 
-@Configuration
-public class JWTConfig {
+@UtilityClass
+public class NumberUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
-
-    @Bean
-    public Algorithm algorithm() {
-        return Algorithm.HMAC512(secret);
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

@@ -16,17 +16,27 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.repository;
+package nl.dannyj.bookmarkmanager.services.auth;
 
-import nl.dannyj.bookmarkmanager.model.UserModel;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+@Service
+public class PasswordHashService {
 
-@Repository
-public interface UserRepository extends CrudRepository<UserModel, Long> {
+    private final PasswordEncoder passwordEncoder;
 
-    Optional<UserModel> findByUsername(String username);
+    @Autowired
+    public PasswordHashService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
+    public String hashPassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    public boolean verifyPassword(String password, String passwordHash) {
+        return passwordEncoder.matches(password, passwordHash);
+    }
 }

@@ -16,35 +16,12 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.model;
+package nl.dannyj.bookmarkmanager.transformers;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
+public interface Transformer<T, S> {
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@DynamicUpdate
-@Builder
-public class UserModel {
+    T toModel(S dto);
 
-    @Id
-    @GeneratedValue
-    @NotNull
-    private long id;
-
-    @NotNull
-    @Column(unique = true)
-    private String username;
-
-    @NotNull
-    private String passwordHash;
+    S toDto(T model);
 
 }

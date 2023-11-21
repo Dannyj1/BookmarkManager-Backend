@@ -16,10 +16,10 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.service;
+package nl.dannyj.bookmarkmanager.services;
 
-import nl.dannyj.bookmarkmanager.model.UserModel;
-import nl.dannyj.bookmarkmanager.repository.UserRepository;
+import nl.dannyj.bookmarkmanager.models.User;
+import nl.dannyj.bookmarkmanager.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,11 +35,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<UserModel> getUserById(Long id) {
+    public Optional<User> getUserById(int id) {
         return userRepository.findById(id);
     }
 
-    public Optional<UserModel> getUserByUsername(String username) {
+    public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 }

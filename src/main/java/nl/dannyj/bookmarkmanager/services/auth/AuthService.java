@@ -16,7 +16,21 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.dto;
+package nl.dannyj.bookmarkmanager.services.auth;
 
-public class BookmarkDTO {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AuthService {
+
+    private final PasswordHashService passwordHashService;
+
+    @Autowired
+    public AuthService(PasswordHashService passwordHashService) {
+        this.passwordHashService = passwordHashService;
+    }
+
+
+
 }

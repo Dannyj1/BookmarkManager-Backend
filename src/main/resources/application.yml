@@ -1,0 +1,18 @@
+settings:
+  security:
+    # This secret has to be replaced before deployment, the application will not start otherwise.
+    # Has to be 512 bits (64 bytes) long, preferably generated with a cryptographically secure random number generator.
+    jwt-secret: "G2OTDQ3Zwgdf2Ltt3qNcOxXPb2tEpR2qCWyRaQpvzDqGh5FMzaZcC77oRPDQ8xXL2zH6rmKR/ORh/q6fncD+Mg=="
+spring:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/DB_NAME
+    username: DB_USER
+    password: DB_PASSWORD
+#logging:
+#  level:
+#    org.springframework: DEBUG

@@ -16,22 +16,13 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.transformer;
+package nl.dannyj.bookmarkmanager.dtos;
 
-import lombok.NonNull;
-import nl.dannyj.bookmarkmanager.dto.UserDTO;
-import nl.dannyj.bookmarkmanager.model.UserModel;
+import lombok.Data;
 
-public class UserTransformer implements Transformer<UserModel, UserDTO> {
-    @Override
-    public UserModel toModel(@NonNull UserDTO dto) {
-        return UserModel.builder()
-                .username(dto.getUsername())
-                .build();
-    }
+@Data
+public class UserDTO {
 
-    @Override
-    public UserDTO toDto(@NonNull UserModel model) {
-        return new UserDTO(model.getUsername());
-    }
+    private final String username;
+
 }

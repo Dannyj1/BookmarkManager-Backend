@@ -16,12 +16,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.transformer;
+package nl.dannyj.bookmarkmanager.dtos;
 
-public interface Transformer<T, S> {
-
-    T toModel(S dto);
-
-    S toDto(T model);
-
+public class BookmarkDTO {
 }

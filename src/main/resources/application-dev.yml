@@ -1,0 +1,10 @@
+settings:
+  security:
+    jwt-secret: "90hzU0rimTVqqsu2BMeDIXIs4rzyUCDSgsGC9NJ1Ybq/0AjZEd/uUv2id/0iXk9+PmIEnlyjkQkn9aMj97r9Cw=="
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/dev
+    username: root
+    # Use no password for local development
+    password:
