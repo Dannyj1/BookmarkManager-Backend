@@ -55,17 +55,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
-        String headerPrefix = "Bearer ";
-
-        if (authHeader == null || !authHeader.startsWith(headerPrefix)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        int headerPrefixLength = headerPrefix.length();
-        String token = authHeader.substring(headerPrefixLength);
-        Optional<DecodedJWT> optToken = jwtService.decodeToken(token);
+        Optional<DecodedJWT> optToken = decodeJwtToken(request, response);
 
         if (optToken.isEmpty()) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -74,14 +64,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         DecodedJWT jwt = optToken.get();
         String subject = jwt.getSubject();
-
-        if (!NumberUtil.isInteger(subject)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        int userId = Integer.parseInt(subject);
-        Optional<User> optUser = userService.getUserById(userId);
+        Optional<User> optUser = getUser(subject);
 
         if (optUser.isEmpty()) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -89,16 +72,43 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         User user = optUser.get();
+        Set<SimpleGrantedAuthority> authorities = getAuthorities(user);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(subject, null, authorities);
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+        filterChain.doFilter(request, response);
+    }
+
+    private static Set<SimpleGrantedAuthority> getAuthorities(User user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
         if (user.isAdmin()) {
             authorities.add(new SimpleGrantedAuthority("ADMIN"));
         }
+        return authorities;
+    }
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(subject,
-                null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+    private Optional<User> getUser(String subject) {
+        if (!NumberUtil.isInteger(subject)) {
+            return Optional.empty();
+        }
 
-        filterChain.doFilter(request, response);
+        int userId = Integer.parseInt(subject);
+        return userService.getUserById(userId);
+    }
+
+    private Optional<DecodedJWT> decodeJwtToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String authHeader = request.getHeader("Authorization");
+        String headerPrefix = "Bearer ";
+
+        if (authHeader == null || !authHeader.startsWith(headerPrefix)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return Optional.empty();
+        }
+
+        int headerPrefixLength = headerPrefix.length();
+        String token = authHeader.substring(headerPrefixLength);
+        
+        return jwtService.decodeToken(token);
     }
 }

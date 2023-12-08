@@ -33,7 +33,7 @@ public class PropertiesValidator {
 
     private final ApplicationProperties applicationProperties;
 
-    private static final String DEFAULT_TOKEN = "G2OTDQ3Zwgdf2Ltt3qNcOxXPb2tEpR2qCWyRaQpvzDqGh5FMzaZcC77oRPDQ8xXL2zH6rmKR/ORh/q6fncD+Mg==";
+    private static final String DEFAULT_TOKEN = "CHANGEME";
 
     @Autowired
     public PropertiesValidator(ApplicationContext applicationContext, ApplicationProperties applicationProperties) {

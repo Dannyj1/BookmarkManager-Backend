@@ -19,8 +19,9 @@
 package nl.dannyj.bookmarkmanager.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 
 // https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html
-@Controller
 public class AuthController {
+
 }
