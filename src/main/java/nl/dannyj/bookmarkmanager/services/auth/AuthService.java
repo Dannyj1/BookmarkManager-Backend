@@ -33,6 +33,10 @@ import java.util.regex.Pattern;
 public class AuthService {
 
     private static final Pattern USERNAME_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
+    private static final Pattern LOWERCASE = Pattern.compile("[a-z]");
+    private static final Pattern UPPERCASE = Pattern.compile("[A-Z]");
+    private static final Pattern DIGIT = Pattern.compile("[0-9]");
+    private static final Pattern SPECIAL_CHAR = Pattern.compile("[^a-zA-Z0-9]");
 
     private final PasswordHashService passwordHashService;
     private final UserService userService;
@@ -53,6 +57,11 @@ public class AuthService {
         }
 
         String password = loginRequest.getPassword();
+
+        if (!isPasswordValid(password)) {
+            throw new InvalidLoginCredentialsException();
+        }
+
         boolean remember = loginRequest.isRemember();
         User user = userService.findUserByUsername(username)
                 .orElseThrow(InvalidLoginCredentialsException::new);
@@ -71,5 +80,17 @@ public class AuthService {
         }
 
         return USERNAME_REGEX.matcher(username).matches();
+    }
+
+    private boolean isPasswordValid(@NonNull String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        // contains at least one lowercase, one uppercase, one number and one special character
+        return LOWERCASE.matcher(password).find() &&
+                UPPERCASE.matcher(password).find() &&
+                DIGIT.matcher(password).find() &&
+                SPECIAL_CHAR.matcher(password).find();
     }
 }
