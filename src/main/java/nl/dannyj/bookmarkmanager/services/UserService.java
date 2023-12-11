@@ -35,11 +35,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> getUserById(int id) {
+    public Optional<User> findUserById(int id) {
         return userRepository.findById(id);
     }
 
-    public Optional<User> getUserByUsername(String username) {
+    public Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 }

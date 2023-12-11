@@ -32,11 +32,11 @@ public class PasswordHashService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String hashPassword(String password) {
-        return passwordEncoder.encode(password);
+    public String hashPassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
     }
 
-    public boolean verifyPassword(String password, String passwordHash) {
-        return passwordEncoder.matches(password, passwordHash);
+    public boolean verifyPassword(String rawPassword, String passwordHash) {
+        return passwordEncoder.matches(rawPassword, passwordHash);
     }
 }

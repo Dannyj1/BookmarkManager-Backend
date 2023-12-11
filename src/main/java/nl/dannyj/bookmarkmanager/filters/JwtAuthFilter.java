@@ -52,6 +52,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
+    private static Set<SimpleGrantedAuthority> getAuthorities(User user) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+
+        if (user.isAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        }
+        return authorities;
+    }
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -79,22 +88,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private static Set<SimpleGrantedAuthority> getAuthorities(User user) {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-
-        if (user.isAdmin()) {
-            authorities.add(new SimpleGrantedAuthority("ADMIN"));
-        }
-        return authorities;
-    }
-
     private Optional<User> getUser(String subject) {
         if (!NumberUtil.isInteger(subject)) {
             return Optional.empty();
         }
 
         int userId = Integer.parseInt(subject);
-        return userService.getUserById(userId);
+        return userService.findUserById(userId);
     }
 
     private Optional<DecodedJWT> decodeJwtToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -108,7 +108,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         int headerPrefixLength = headerPrefix.length();
         String token = authHeader.substring(headerPrefixLength);
-        
+
         return jwtService.decodeToken(token);
     }
 }

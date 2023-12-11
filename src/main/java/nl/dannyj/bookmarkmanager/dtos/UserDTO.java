@@ -18,11 +18,13 @@
 
 package nl.dannyj.bookmarkmanager.dtos;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class UserDTO {
 
-    private final String username;
+    private String username;
 
 }

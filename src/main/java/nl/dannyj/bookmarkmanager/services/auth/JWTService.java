@@ -22,9 +22,12 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import nl.dannyj.bookmarkmanager.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -54,5 +57,21 @@ public class JWTService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    public String generateToken(User user, boolean remember) {
+        String userId = Integer.toString(user.getId());
+        Instant expirationTime = Instant.now().plus(Duration.ofHours(12));
+
+        if (remember) {
+            expirationTime = Instant.now().plus(Duration.ofDays(30));
+        }
+
+        return JWT.create()
+                .withSubject(userId)
+                .withClaim("username", user.getUsername())
+                .withExpiresAt(expirationTime)
+                .withIssuedAt(Instant.now())
+                .sign(jwtAlgorithm);
     }
 }

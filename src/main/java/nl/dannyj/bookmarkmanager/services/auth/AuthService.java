@@ -18,6 +18,11 @@
 
 package nl.dannyj.bookmarkmanager.services.auth;
 
+import nl.dannyj.bookmarkmanager.dtos.auth.AuthTokenDTO;
+import nl.dannyj.bookmarkmanager.dtos.auth.LoginRequestDTO;
+import nl.dannyj.bookmarkmanager.exceptions.InvalidLoginCredentialsException;
+import nl.dannyj.bookmarkmanager.models.User;
+import nl.dannyj.bookmarkmanager.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +30,28 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final PasswordHashService passwordHashService;
+    private final UserService userService;
+    private final JWTService jwtService;
 
     @Autowired
-    public AuthService(PasswordHashService passwordHashService) {
+    public AuthService(PasswordHashService passwordHashService, UserService userService, JWTService jwtService) {
         this.passwordHashService = passwordHashService;
+        this.userService = userService;
+        this.jwtService = jwtService;
     }
 
+    public AuthTokenDTO authenticate(LoginRequestDTO loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+        boolean remember = loginRequest.isRemember();
+        User user = userService.findUserByUsername(username)
+                .orElseThrow(InvalidLoginCredentialsException::new);
 
+        if (!passwordHashService.verifyPassword(password, user.getPasswordHash())) {
+            throw new InvalidLoginCredentialsException();
+        }
 
+        String token = this.jwtService.generateToken(user, remember);
+        return new AuthTokenDTO(token);
+    }
 }

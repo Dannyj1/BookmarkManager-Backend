@@ -29,11 +29,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class PropertiesValidator {
 
-    private final ApplicationContext applicationContext;
-
-    private final ApplicationProperties applicationProperties;
-
     private static final String DEFAULT_TOKEN = "CHANGEME";
+    private final ApplicationContext applicationContext;
+    private final ApplicationProperties applicationProperties;
 
     @Autowired
     public PropertiesValidator(ApplicationContext applicationContext, ApplicationProperties applicationProperties) {

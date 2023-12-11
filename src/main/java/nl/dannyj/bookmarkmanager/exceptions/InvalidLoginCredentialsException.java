@@ -16,12 +16,11 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.dtos;
+package nl.dannyj.bookmarkmanager.exceptions;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.experimental.StandardException;
 
-@Getter
-@Setter
-public class BookmarkDTO {
+@StandardException
+public class InvalidLoginCredentialsException extends RuntimeException {
+
 }

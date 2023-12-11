@@ -16,12 +16,17 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package nl.dannyj.bookmarkmanager.dtos;
+package nl.dannyj.bookmarkmanager.dtos.auth;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class BookmarkDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AuthTokenDTO {
+    private String token;
 }

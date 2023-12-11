@@ -18,10 +18,28 @@
 
 package nl.dannyj.bookmarkmanager.controllers;
 
-import org.springframework.stereotype.Controller;
+import nl.dannyj.bookmarkmanager.dtos.auth.AuthTokenDTO;
+import nl.dannyj.bookmarkmanager.dtos.auth.LoginRequestDTO;
+import nl.dannyj.bookmarkmanager.services.auth.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 // https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html
+@RestController("auth")
 public class AuthController {
 
+    private final AuthService authService;
+
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthTokenDTO> login(LoginRequestDTO loginRequest) {
+        AuthTokenDTO token = authService.authenticate(loginRequest);
+        return ResponseEntity.ok(token);
+    }
 }
