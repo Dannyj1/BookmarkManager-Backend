@@ -22,5 +22,7 @@ import lombok.experimental.StandardException;
 
 @StandardException
 public class InvalidLoginCredentialsException extends RuntimeException {
-
+    public InvalidLoginCredentialsException() {
+        super("The provided username or password is incorrect.");
+    }
 }

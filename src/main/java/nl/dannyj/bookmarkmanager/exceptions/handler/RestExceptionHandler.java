@@ -29,11 +29,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({InvalidLoginCredentialsException.class})
-    public ProblemDetail handleInvalidLoginCredentialsException(InvalidLoginCredentialsException e) {
+    ProblemDetail handleInvalidLoginCredentialsException(InvalidLoginCredentialsException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage());
 
         problemDetail.setTitle("Invalid login credentials");
-        problemDetail.setDetail("The username or password you entered is incorrect.");
         return problemDetail;
     }
 }

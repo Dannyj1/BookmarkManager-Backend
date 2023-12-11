@@ -18,6 +18,7 @@
 
 package nl.dannyj.bookmarkmanager.services.auth;
 
+import lombok.NonNull;
 import nl.dannyj.bookmarkmanager.dtos.auth.AuthTokenDTO;
 import nl.dannyj.bookmarkmanager.dtos.auth.LoginRequestDTO;
 import nl.dannyj.bookmarkmanager.exceptions.InvalidLoginCredentialsException;
@@ -26,8 +27,12 @@ import nl.dannyj.bookmarkmanager.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Pattern;
+
 @Service
 public class AuthService {
+
+    private static final Pattern USERNAME_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
 
     private final PasswordHashService passwordHashService;
     private final UserService userService;
@@ -40,10 +45,12 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public AuthTokenDTO authenticate(LoginRequestDTO loginRequest) {
+    public AuthTokenDTO authenticate(@NonNull LoginRequestDTO loginRequest) {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
         boolean remember = loginRequest.isRemember();
+
+        validateUsernameAndPassword(username, password);
         User user = userService.findUserByUsername(username)
                 .orElseThrow(InvalidLoginCredentialsException::new);
 
@@ -53,5 +60,19 @@ public class AuthService {
 
         String token = this.jwtService.generateToken(user, remember);
         return new AuthTokenDTO(token);
+    }
+
+    private void validateUsernameAndPassword(@NonNull String username, @NonNull String password) {
+        if (username.length() < 3 || username.length() > 32) {
+            throw new InvalidLoginCredentialsException();
+        }
+
+        if (!USERNAME_REGEX.matcher(username).matches()) {
+            throw new InvalidLoginCredentialsException();
+        }
+
+        if (password.length() > 128) {
+            throw new InvalidLoginCredentialsException();
+        }
     }
 }
