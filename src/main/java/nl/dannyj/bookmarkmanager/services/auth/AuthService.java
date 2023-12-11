@@ -47,10 +47,13 @@ public class AuthService {
 
     public AuthTokenDTO authenticate(@NonNull LoginRequestDTO loginRequest) {
         String username = loginRequest.getUsername();
+
+        if (!isUsernameValid(username)) {
+            throw new InvalidLoginCredentialsException();
+        }
+
         String password = loginRequest.getPassword();
         boolean remember = loginRequest.isRemember();
-
-        validateUsernameAndPassword(username, password);
         User user = userService.findUserByUsername(username)
                 .orElseThrow(InvalidLoginCredentialsException::new);
 
@@ -62,17 +65,11 @@ public class AuthService {
         return new AuthTokenDTO(token);
     }
 
-    private void validateUsernameAndPassword(@NonNull String username, @NonNull String password) {
+    private boolean isUsernameValid(@NonNull String username) {
         if (username.length() < 3 || username.length() > 32) {
-            throw new InvalidLoginCredentialsException();
+            return false;
         }
 
-        if (!USERNAME_REGEX.matcher(username).matches()) {
-            throw new InvalidLoginCredentialsException();
-        }
-
-        if (password.length() > 128) {
-            throw new InvalidLoginCredentialsException();
-        }
+        return USERNAME_REGEX.matcher(username).matches();
     }
 }
