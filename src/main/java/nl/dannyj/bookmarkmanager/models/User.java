@@ -23,6 +23,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,6 +46,8 @@ public class User {
 
     @NotNull
     @Column(unique = true)
+    @Size(min = 3, max = 32)
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$")
     private String username;
 
     @NotNull
