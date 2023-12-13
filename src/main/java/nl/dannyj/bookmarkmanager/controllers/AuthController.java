@@ -26,7 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html
 @RestController("auth")
 public class AuthController {
 

@@ -24,6 +24,10 @@ import nl.dannyj.bookmarkmanager.dtos.auth.LoginRequestDTO;
 import nl.dannyj.bookmarkmanager.exceptions.InvalidLoginCredentialsException;
 import nl.dannyj.bookmarkmanager.models.User;
 import nl.dannyj.bookmarkmanager.services.UserService;
+import nl.dannyj.bookmarkmanager.validators.Validator;
+import nl.dannyj.bookmarkmanager.validators.ValidatorResult;
+import nl.dannyj.bookmarkmanager.validators.auth.PasswordValidator;
+import nl.dannyj.bookmarkmanager.validators.auth.UsernameValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,33 +36,36 @@ import java.util.regex.Pattern;
 @Service
 public class AuthService {
 
-    private static final Pattern USERNAME_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
-    private static final Pattern LOWERCASE = Pattern.compile("[a-z]");
-    private static final Pattern UPPERCASE = Pattern.compile("[A-Z]");
-    private static final Pattern DIGIT = Pattern.compile("[0-9]");
-    private static final Pattern SPECIAL_CHAR = Pattern.compile("[^a-zA-Z0-9]");
-
     private final PasswordHashService passwordHashService;
     private final UserService userService;
     private final JWTService jwtService;
+
+    private final Validator<String> usernameValidator;
+    private final Validator<String> passwordValidator;
 
     @Autowired
     public AuthService(PasswordHashService passwordHashService, UserService userService, JWTService jwtService) {
         this.passwordHashService = passwordHashService;
         this.userService = userService;
         this.jwtService = jwtService;
+        this.usernameValidator = new UsernameValidator();
+        this.passwordValidator = new PasswordValidator();
     }
 
+    // TODO: consider ideas: Checking against HIBP and notifying user (or even forcing password change)
+    // TODO: consider ideas: Implement cloudflare's captcha (optional feature)
     public AuthTokenDTO authenticate(@NonNull LoginRequestDTO loginRequest) {
         String username = loginRequest.getUsername();
+        ValidatorResult<String> usernameValidationResult = usernameValidator.validate(username);
 
-        if (!isUsernameValid(username)) {
+        if (!usernameValidationResult.isValid()) {
             throw new InvalidLoginCredentialsException();
         }
 
         String password = loginRequest.getPassword();
+        ValidatorResult<String> passwordValidationResult = passwordValidator.validate(password);
 
-        if (!isPasswordValid(password)) {
+        if (!passwordValidationResult.isValid()) {
             throw new InvalidLoginCredentialsException();
         }
 
@@ -74,23 +81,9 @@ public class AuthService {
         return new AuthTokenDTO(token);
     }
 
-    private boolean isUsernameValid(@NonNull String username) {
-        if (username.length() < 3 || username.length() > 32) {
-            return false;
-        }
+    // TODO: implement, return something
+    // TODO: consider ideas: Checking against HIBP: https://github.com/GideonLeGrange/haveibeenpwned
+    public void register () {
 
-        return USERNAME_REGEX.matcher(username).matches();
-    }
-
-    private boolean isPasswordValid(@NonNull String password) {
-        if (password.length() < 8) {
-            return false;
-        }
-
-        // contains at least one lowercase, one uppercase, one number and one special character
-        return LOWERCASE.matcher(password).find() &&
-                UPPERCASE.matcher(password).find() &&
-                DIGIT.matcher(password).find() &&
-                SPECIAL_CHAR.matcher(password).find();
     }
 }
